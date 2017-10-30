@@ -11,7 +11,6 @@ from app.models import Report, User
 
 
 class ReportForm(FlaskForm):
-    name = StringField('Name?', validators=[Required()])
     date = DateField('Date?', validators=[Required()])
     body = TextAreaField("Today?", validators=[Required()])
     submit = SubmitField('Submit')
@@ -20,4 +19,10 @@ class ReportForm(FlaskForm):
 class NameForm(FlaskForm):
     name = StringField('What is your name?', validators=[Required()])
     submit = SubmitField('Submit')
+
+
+class LoginForm(FlaskForm):
+    username = StringField('What is your name?', validators=[Required()])
+    remember_me = BooleanField('Keep me logged in')
+    submit = SubmitField('Log In')
 
