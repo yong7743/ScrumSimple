@@ -17,5 +17,23 @@ users
 reports
 - id
 - user_id
-- today
+- date
+- today_report
 - position(optional)
+
+
+Notes:
+
+create run and run shell in pycharm
+
+runshell
+script: C:\Projects\team-status\manage.py
+parameters: shell
+env: DEV_DATABASE_URL=sqlite:///c:/projects/team-status/data/data-dev.sqlite;PYTHONUNBUFFERED=1
+
+run
+script: C:\Projects\team-status\manage.py
+parameters: runserver
+env: DEV_DATABASE_URL=sqlite:///c:/projects/team-status/data/data-dev.sqlite;PYTHONUNBUFFERED=1
+
+first runshell then keyin db.create_all() to init the database
