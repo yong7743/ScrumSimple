@@ -40,3 +40,9 @@ first runshell then keyin
 db.drop_all()
 db.create_all() 
 to init the database
+
+
+数据库迁移
+数据导出
+权限与角色
+其他用户数据浏览
