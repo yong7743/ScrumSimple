@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 
 {% block title %}report{% endblock %}
 {% block page_content %}
@@ -21,6 +22,8 @@
 <div class="Report-form">
     {{ wtf.quick_form(form) }}
 </div>
+
+<div>
 <ul class="reports">
     {% for report in reports %}
     <li class="report">
@@ -37,4 +40,11 @@
     </li>
     {% endfor %}
 </ul>
+</div>
+
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.index') }}
+</div>
+{% endif %}
 {% endblock %}

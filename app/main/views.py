@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, make_response,send_file
 import os,sys
-from flask import Flask, render_template, session, redirect, url_for, flash
+from flask import Flask, render_template, session, redirect, url_for, flash, current_app
 from . import main
 from .forms import ReportForm, LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
@@ -20,8 +20,12 @@ def index():
                         author=current_user._get_current_object())
         db.session.add(report)
         return redirect(url_for('.index'))
-    reports = Report.query.order_by(Report.date.desc()).all()
-    return render_template("report.html", form=form, reports=reports)
+    page = request.args.get('page', 1, type=int)
+    pagination = Report.query.order_by(Report.date.desc()).paginate(
+        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+        error_out=False)
+    reports = pagination.items
+    return render_template("report.html", form=form, reports=reports, pagination=pagination)
 
 
 @main.route('/user/<username>')
