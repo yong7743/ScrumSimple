@@ -36,4 +36,7 @@ script: C:\Projects\team-status\manage.py
 parameters: runserver
 env: DEV_DATABASE_URL=sqlite:///c:/projects/team-status/data/data-dev.sqlite;PYTHONUNBUFFERED=1
 
-first runshell then keyin db.create_all() to init the database
+first runshell then keyin 
+db.drop_all()
+db.create_all() 
+to init the database

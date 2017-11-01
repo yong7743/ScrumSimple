@@ -1,10 +1,40 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Post{% endblock %}
+{% block title %}report{% endblock %}
 {% block page_content %}
 <h4 id="report">Report</h4>
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+    $('#date').datepicker({
+        weekStart: 1,
+        autoclose: true,
+        daysOfWeekHighlighted: "0,6",
+        format: "yyyy/mm/dd",
+        language: "zh-CN"
+    });
+    </script>
+{% endblock %}
+
 <div class="Report-form">
     {{ wtf.quick_form(form) }}
 </div>
+<ul class="reports">
+    {% for report in reports %}
+    <li class="report">
+        <div class="post-thumbnail">
+            <a href="{{ url_for('.user', username=report.author.username) }}">
+                <img class="img-rounded profile-thumbnail" src="{{ report.author.gravatar(size=40) }}">
+            </a>
+        </div>
+        <div class="post-content">
+            <div class="post-date">{{ report.date }}</div>
+            <div class="post-author"><a href="{{ url_for('.user', username=report.author.username) }}">{{ report.author.username }}</a></div>
+            <div class="post-body">{{ report.body }}</div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
 {% endblock %}

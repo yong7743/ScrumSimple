@@ -6,6 +6,7 @@ from flask_login import UserMixin
 from . import db, login_manager
 import json
 import urllib
+import hashlib
 
 url_user_info = 'https://api.github.com/user'
 
@@ -31,7 +32,7 @@ class GitHubOauth():
 class Report(db.Model):
     __tablename__ = 'reports'
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, unique=True)
+    date = db.Column(db.Date)
     body = db.Column(db.Text)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
@@ -56,6 +57,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, index=True)
     email = db.Column(db.String(64), unique=True)
+    avatar_hash = db.Column(db.String(32))
     # https://github.com/cenkalti/github-flask/blob/master/example.py#L49
     github_access_token = db.Column(db.String(200), unique=True)
     reports = db.relationship('Report', backref='author', lazy='dynamic')
@@ -78,6 +80,19 @@ class User(UserMixin, db.Model):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+        if self.email is not None and self.avatar_hash is None:
+            self.avatar_hash = hashlib.md5(
+                self.email.encode('utf-8')).hexdigest()
+
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        if request.is_secure:
+            url = 'https://secure.gravatar.com/avatar'
+        else:
+            url = 'http://www.gravatar.com/avatar'
+        hash = self.avatar_hash or hashlib.md5(
+            self.email.encode('utf-8')).hexdigest()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url, hash=hash, size=size, default=default, rating=rating)
 
     def to_json(self):
         json_user = {

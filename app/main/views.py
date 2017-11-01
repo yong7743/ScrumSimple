@@ -8,20 +8,26 @@ from ..models import User, Report, GitHubOauth
 from .. import db, github
 
 
-
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
     form = ReportForm()
-    if current_user is not None:
-        form.name = current_user.username
+#    if current_user is not None:
+#        form.name = current_user.username
     if form.validate_on_submit():
         report = Report(date=form.date.data,
                         body=form.body.data,
                         author=current_user._get_current_object())
         db.session.add(report)
         return redirect(url_for('.index'))
-    return render_template("report.html", form=form)
+    reports = Report.query.order_by(Report.date.desc()).all()
+    return render_template("report.html", form=form, reports=reports)
+
+
+@main.route('/user/<username>')
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('user.html', user=user)
 
 
 @main.route('/github-callback')
@@ -45,20 +51,10 @@ def authorized(oauth_token):
 @main.route("/login", methods=['GET', 'POST'])
 def login():
     return github.authorize()
-
-
-@main.route("/login_normal", methods=['GET', 'POST'])
-def login_normal():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is None:
-            user = User(username=form.username.data)
-            db.session.add(user)
-            db.session.commit()
-        login_user(user, form.remember_me.data)
-        return redirect(request.args.get('next') or url_for('main.index'))
-    return render_template("login.html", form=form)
+#    form = LoginForm()
+#    if form.validate_on_submit():
+#        return github.authorize()
+#    return render_template("login.html", form=form)
 
 
 @main.route('/logout')
