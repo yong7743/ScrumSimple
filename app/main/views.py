@@ -25,7 +25,7 @@ def index():
         page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
         error_out=False)
     reports = pagination.items
-    return render_template("report.html", form=form, reports=reports, pagination=pagination)
+    return render_template("index.html", form=form, reports=reports, pagination=pagination)
 
 
 @main.route('/user/<username>')
@@ -52,6 +52,12 @@ def authorized(oauth_token):
     return redirect(request.args.get('next') or url_for('main.index'))
 
 
+@main.route('/report/<int:id>')
+def report(id):
+    report = Report.query.get_or_404(id)
+    return render_template('report.html', reports=[report])
+
+
 @main.route("/login", methods=['GET', 'POST'])
 def login():
     return github.authorize()
@@ -67,6 +73,23 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
+
+
+@main.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    report = Report.query.get_or_404(id)
+    if current_user != report.author:
+        return "Not allow!"
+    form = ReportForm()
+    if form.validate_on_submit():
+        report.body = form.body.data
+        db.session.add(report)
+        flash('The post has been updated.')
+        return redirect(url_for('.report', id=report.id))
+    form.body.data = report.body
+    form.date.data = report.date
+    return render_template('edit_report.html', form=form)
 
 if __name__ == '__main__':
     pass

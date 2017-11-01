@@ -1,50 +1,8 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 
-{% block title %}report{% endblock %}
+{% block title %}Report{% endblock %}
+
 {% block page_content %}
-<h4 id="report">Report</h4>
-
-{% block scripts %}
-    {{ super() }}
-    <script type="text/javascript">
-    $('#date').datepicker({
-        weekStart: 1,
-        autoclose: true,
-        daysOfWeekHighlighted: "0,6",
-        format: "yyyy/mm/dd",
-        language: "zh-CN"
-    });
-    </script>
-{% endblock %}
-
-<div class="Report-form">
-    {{ wtf.quick_form(form) }}
-</div>
-
-<div>
-<ul class="reports">
-    {% for report in reports %}
-    <li class="report">
-        <div class="post-thumbnail">
-            <a href="{{ url_for('.user', username=report.author.username) }}">
-                <img class="img-rounded profile-thumbnail" src="{{ report.author.gravatar(size=40) }}">
-            </a>
-        </div>
-        <div class="post-content">
-            <div class="post-date">{{ report.date }}</div>
-            <div class="post-author"><a href="{{ url_for('.user', username=report.author.username) }}">{{ report.author.username }}</a></div>
-            <div class="post-body">{{ report.body }}</div>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
-</div>
-
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.index') }}
-</div>
-{% endif %}
+{% include '_reports.html' %}
 {% endblock %}
