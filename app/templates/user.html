@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 
 {% block title %}Post{% endblock %}
 {% block page_content %}
@@ -8,6 +9,14 @@
     <div class="profile-header">
         <h1>{{ user.username }}</h1>
         <h2>{{ user.email }}</h2>
+    <div class="reports">
+        <h3>Reports by {{ user.username }}</h3>
+        {% include '_reports.html' %}
+        {% if pagination %}
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, '.user', username=user.username) }}
+        </div>
+{% endif %}
     </div>
 </div>
 {% endblock %}
