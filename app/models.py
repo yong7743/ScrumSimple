@@ -41,7 +41,6 @@ class User(UserMixin, db.Model):
     github_access_token = db.Column(db.String(200), unique=True)
     reports = db.relationship('Report', backref='author', lazy='dynamic')
 
-
     @staticmethod
     def generate_fake(count=100):
         from sqlalchemy.exc import IntegrityError
@@ -97,21 +96,6 @@ class Report(db.Model):
      author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
      @staticmethod
-     def generate_fake(count=100):
-         from random import seed, randint
-         import forgery_py
-
-         seed()
-         user_count = User.query.count()
-         for i in range(count):
-             u = User.query.offset(randint(0, user_count - 1)).first()
-             r = Report(body=forgery_py.lorem_ipsum.sentences(randint(1, 5)),
-                        date=forgery_py.date.date(True),
-                        author=u)
-             db.session.add(r)
-             db.session.commit()
-
-     @staticmethod
      def on_changed_body(target, value, oldvalue, initiator):
          allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
@@ -121,6 +105,7 @@ class Report(db.Model):
             tags=allowed_tags, strip=True))
 
 db.event.listen(Report.body, 'set', Report.on_changed_body)
+
 
 @login_manager.user_loader
 def load_user(user_id):

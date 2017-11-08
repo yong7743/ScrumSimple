@@ -36,6 +36,11 @@ script: C:\Projects\team-status\manage.py
 parameters: runserver
 env: DEV_DATABASE_URL=sqlite:///c:/projects/team-status/data/data-dev.sqlite;PYTHONUNBUFFERED=1
 
+
+python manage.py db init
+python manage.py db migrate -m "init"
+python manage.py db upgrade
+
 first runshell then keyin 
 db.drop_all()
 db.create_all() 

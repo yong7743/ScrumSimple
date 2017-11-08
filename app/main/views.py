@@ -12,8 +12,6 @@ from .. import db, github
 @login_required
 def index():
     form = ReportForm()
-#    if current_user is not None:
-#        form.name = current_user.username
     if form.validate_on_submit():
         report = Report(date=form.date.data,
                         body=form.body.data,
