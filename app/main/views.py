@@ -123,6 +123,7 @@ def edit(id):
     form = ReportForm()
     if form.validate_on_submit():
         report.body = form.body.data
+        report.date = form.date.data
         db.session.add(report)
         flash('The post has been updated.')
         return redirect(url_for('.report', id=report.id))
