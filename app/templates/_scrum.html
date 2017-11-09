@@ -1,0 +1,24 @@
+<div class="scrums">
+    {% if scrums %}
+    <table border="1">
+        <tr>
+            <th>date</th>
+            <th>name</th>
+            <th>content</th>
+        </tr>
+     {% for report in scrums %}
+        <tr>
+            <td class="scrum-date">{{ report.date }}</td>
+            <td class="scrum-author"><a href="{{ url_for('.user', username=report.author.username) }}">{{ report.author.username }}</a></td>
+            <td class="scrum-body">
+                {% if report.body_html %}
+                    {{ report.body_html | safe }}
+                {% else %}
+                    {{ report.body }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+</div>

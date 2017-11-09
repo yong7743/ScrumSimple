@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Scrum{% endblock %}
+{% block page_content %}
+<h4 id="report">Scrum</h4>
+
+{% block scripts %}
+    {{ super() }}
+    {{ pagedown.include_pagedown() }}
+    <script type="text/javascript">
+    $('#start').datepicker({
+        weekStart: 1,
+        autoclose: true,
+        daysOfWeekHighlighted: "0,6",
+        format: "yyyy/mm/dd",
+        language: "zh-CN"
+    });
+
+    $('#end').datepicker({
+    weekStart: 1,
+        autoclose: true,
+        daysOfWeekHighlighted: "0,6",
+        format: "yyyy/mm/dd",
+        language: "zh-CN"
+    });
+
+    </script>
+{% endblock %}
+
+<div class="Scrum-form">
+    {{ wtf.quick_form(form) }}
+</div>
+
+<div class="table-header">
+    <p></p>
+    <p></p>
+    <h2>{{ header }}</h2>
+    <p></p>
+</div>
+
+<div>
+{% include '_scrum.html' %}
+</div>
+
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.scrum') }}
+</div>
+{% endif %}
+{% endblock %}

@@ -2,10 +2,11 @@ from flask import Flask, request, render_template, make_response,send_file
 import os,sys
 from flask import Flask, render_template, session, redirect, url_for, flash, current_app
 from . import main
-from .forms import ReportForm, LoginForm
+from .forms import ReportForm, LoginForm, ScrumForm
 from flask_login import login_user, logout_user, login_required, current_user
 from ..models import User, Report, GitHubOauth
 from .. import db, github
+from datetime import datetime
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -24,6 +25,40 @@ def index():
         error_out=False)
     reports = pagination.items
     return render_template("index.html", form=form, reports=reports, pagination=pagination)
+
+
+@main.route('/scrum', methods=['GET', 'POST'])
+@login_required
+def scrum():
+    form = ScrumForm()
+    if form.validate_on_submit():
+        start = form.start.data
+        end = form.end.data
+        session['start'] = "%s/%s/%s" % (start.day, start.month, start.year)
+        session['end'] = "%s/%s/%s" % (end.day, end.month, end.year)
+        return redirect(url_for('.scrum'))
+    scrums = []
+    pagination = None
+    header=None
+    page = request.args.get('page', 1, type=int)
+    if 'start' in session and 'end' in session:
+        #Wed, 01 Nov 2017 00:00:00 GM
+        start = datetime.strptime(session['start'], '%d/%m/%Y')
+        end = datetime.strptime(session['end'], '%d/%m/%Y')
+        header = "Scrums form %s to %s" % (session['start'],session['end'] )
+        pagination = Report.query.filter(Report.date.between(start, end)).order_by(Report.date.desc(), Report.author_id.desc()).paginate(
+        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+        error_out=False)
+        scrums = pagination.items
+        test = Report.query.filter(Report.date.between(start, end)).all()
+        session.pop('start', None)
+        session.pop('end', None)
+    return render_template("scrum.html", form=form, scrums=scrums, header=header, pagination=pagination)
+
+
+def report_filter(reports, start, end):
+    current = Report.query.filter(Report.date.between(start, end)).order_by(Report.date.desc(), Report.author_id.desc())
+    return current
 
 
 @main.route('/user/<username>')

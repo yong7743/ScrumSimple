@@ -19,3 +19,10 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')
 
+class ScrumForm(FlaskForm):
+    start = DateField('Start Date?', default='', validators=[Required()], format='%Y/%m/%d', widget=widgets.DatePickerWidget())
+    end = DateField('End Date?', default='', validators=[Required()], format='%Y/%m/%d', widget=widgets.DatePickerWidget())
+    submit = SubmitField('Submit')
+
+
+
