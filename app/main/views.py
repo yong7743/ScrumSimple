@@ -6,7 +6,7 @@ from .forms import ReportForm, LoginForm, ScrumForm
 from flask_login import login_user, logout_user, login_required, current_user
 from ..models import User, Report, GitHubOauth
 from .. import db, github
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -44,7 +44,7 @@ def scrum():
     if 'start' in session and 'end' in session:
         #Wed, 01 Nov 2017 00:00:00 GM
         start = datetime.strptime(session['start'], '%d/%m/%Y')
-        start = start - datetime.timedelta(days = 1)
+        start = start - timedelta(days = 1)
         end = datetime.strptime(session['end'], '%d/%m/%Y')
         header = "Scrums form %s to %s" % (session['start'],session['end'] )
         pagination = Report.query.filter(Report.date.between(start, end)).order_by(Report.author_id.desc(), Report.date.desc()).paginate(
