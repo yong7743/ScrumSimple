@@ -1,12 +1,12 @@
 <div class="scrums">
     {% if scrums %}
-    <table border="1">
+    <table class="table table-condensed">
         <tr>
-            <th>date</th>
-            <th>name</th>
-            <th>content</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Today</th>
         </tr>
-     {% for report in scrums %}
+        {% for report in scrums %}
         <tr>
             <td class="scrum-date">{{ report.date }}</td>
             <td class="scrum-author"><a href="{{ url_for('.user', username=report.author.username) }}">{{ report.author.username }}</a></td>
