@@ -87,7 +87,7 @@ def authorized(oauth_token):
     if user is None:
         if username is None:
             username = login
-        user = User(username=username, email=email, github_access_token=oauth_token)
+        user = User(username=username, email=email, github_id=github_id, github_access_token=oauth_token)
     user.github_access_token = oauth_token
     db.session.add(user)
     db.session.commit()
