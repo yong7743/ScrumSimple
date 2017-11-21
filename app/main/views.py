@@ -48,13 +48,11 @@ def scrum():
         end = datetime.strptime(session['end'], '%d/%m/%Y')
         header = "Scrums form %s to %s" % (session['start'],session['end'] )
         pagination = Report.query.filter(Report.date.between(start, end)).order_by(Report.author_id.desc(), Report.date.desc()).paginate(
-        #page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
-        page, per_page=100,
+        page, per_page=100,#current_app.config['FLASKY_POSTS_PER_PAGE'],
         error_out=False)
         scrums = pagination.items
-        test = Report.query.filter(Report.date.between(start, end)).all()
-        session.pop('start', None)
-        session.pop('end', None)
+#        session.pop('start', None)
+#        session.pop('end', None)
     return render_template("scrum.html", form=form, scrums=scrums, header=header, pagination=pagination)
 
 

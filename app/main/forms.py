@@ -11,7 +11,7 @@ from flask_pagedown.fields import PageDownField
 
 class ReportForm(FlaskForm):
     date = DateField('Date?', default='', validators=[Required()], format='%Y/%m/%d', widget=widgets.DatePickerWidget())
-    body = PageDownField("Doing what in this date?", validators=[Required()])
+    body = PageDownField("What are you doing?", validators=[Required()])
     submit = SubmitField('Submit')
 
 
