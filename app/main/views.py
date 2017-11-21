@@ -48,7 +48,8 @@ def scrum():
         end = datetime.strptime(session['end'], '%d/%m/%Y')
         header = "Scrums form %s to %s" % (session['start'],session['end'] )
         pagination = Report.query.filter(Report.date.between(start, end)).order_by(Report.author_id.desc(), Report.date.desc()).paginate(
-        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+        #page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+        page, per_page=100,
         error_out=False)
         scrums = pagination.items
         test = Report.query.filter(Report.date.between(start, end)).all()
@@ -74,6 +75,15 @@ def user(username):
                            pagination=pagination)
 
 
+def special_handing_for_no_email_users(username):
+    if username is 'willy2358':
+        username = 'Willy Li'
+    elif username is 'dstwwh':
+        username = "Shengtao Ding"
+    user = User.query.filter_by(username=username).first()
+    return user
+
+
 @main.route('/github-callback')
 @github.authorized_handler
 def authorized(oauth_token):
@@ -83,6 +93,8 @@ def authorized(oauth_token):
         return redirect(next_url)
     username, email = GitHubOauth.get_user_info(github=github, access_token=oauth_token)
     user = User.query.filter_by(email=email).first()
+    if user is None:
+        user = special_handing_for_no_email_users(username)
     if user is None:
         user = User(username=username, email=email, github_access_token=oauth_token)
     user.github_access_token = oauth_token
