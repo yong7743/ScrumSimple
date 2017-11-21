@@ -11,13 +11,14 @@ from flask_pagedown.fields import PageDownField
 
 class ReportForm(FlaskForm):
     date = DateField('Date?', default='', validators=[Required()], format='%Y/%m/%d', widget=widgets.DatePickerWidget())
-    body = PageDownField("Today?", validators=[Required()])
+    body = PageDownField("Doing what in this date?", validators=[Required()])
     submit = SubmitField('Submit')
 
 
 class LoginForm(FlaskForm):
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')
+
 
 class ScrumForm(FlaskForm):
     start = DateField('Start Date?', default='', validators=[Required()], format='%Y/%m/%d', widget=widgets.DatePickerWidget())

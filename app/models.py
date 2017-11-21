@@ -27,7 +27,7 @@ class GitHubOauth():
         response = GitHubOauth._get(url_user_info, params)
         if response is not None:
             result = json.loads(response)
-            return result['name'], result['email']
+            return result['id'], result['login'], result['name'], result['email']
         return None
 
 
@@ -39,6 +39,7 @@ class User(UserMixin, db.Model):
     avatar_hash = db.Column(db.String(32))
     # https://github.com/cenkalti/github-flask/blob/master/example.py#L49
     github_access_token = db.Column(db.String(200), unique=True)
+    github_id = db.Column(db.Integer, unique=True)
     reports = db.relationship('Report', backref='author', lazy='dynamic')
 
     @staticmethod
