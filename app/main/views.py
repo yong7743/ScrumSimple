@@ -27,6 +27,11 @@ def index():
     return render_template("index.html", form=form, reports=reports, pagination=pagination)
 
 
+@main.route('/help', methods=['GET', 'POST'])
+def help():
+    return render_template("help.html")
+
+
 @main.route('/scrum', methods=['GET', 'POST'])
 @login_required
 def scrum():
