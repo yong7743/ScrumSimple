@@ -32,6 +32,16 @@ def help():
     return render_template("help.html")
 
 
+@main.route('/users', methods=['GET', 'POST'])
+def users():
+    page = request.args.get('page', 1, type=int)
+    pagination = User.query.order_by(User.username.asc()).paginate(
+        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+        error_out=False)
+    users = pagination.items
+    return render_template("users.html", users=users, pagination=pagination)
+
+
 @main.route('/scrum', methods=['GET', 'POST'])
 @login_required
 def scrum():
