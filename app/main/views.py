@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
+    current_time = datetime.utcnow()
     form = ReportForm()
     if form.validate_on_submit():
         report = Report(date=form.date.data,
@@ -24,7 +25,7 @@ def index():
         page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
         error_out=False)
     reports = pagination.items
-    return render_template("index.html", form=form, reports=reports, pagination=pagination)
+    return render_template("index.html", form=form, current_time=current_time, reports=reports, pagination=pagination)
 
 
 @main.route('/help', methods=['GET', 'POST'])

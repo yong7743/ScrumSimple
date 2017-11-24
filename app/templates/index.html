@@ -20,6 +20,13 @@
     </script>
 {% endblock %}
 
+<div class="table-header">
+    <p></p>
+    <p></p>
+    <h4><p style="color:red">Now: {{ moment(current_time).format('LLL') }}. Sprint 6</p></h4>
+    <p></p>
+</div>
+
 <div class="Report-form">
     {{ wtf.quick_form(form) }}
 </div>
