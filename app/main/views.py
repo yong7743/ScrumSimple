@@ -62,7 +62,8 @@ def scrum():
         start = start - timedelta(days = 1)
         end = datetime.strptime(session['end'], '%d/%m/%Y')
         header = "Scrums form %s to %s" % (session['start'],session['end'] )
-        pagination = Report.query.filter(Report.date.between(start, end)).order_by(Report.author_id.desc(), Report.date.desc()).paginate(
+        pagination = Report.query.filter(
+            Report.date.between(start, end)).order_by(Report.author_id.asc(), Report.date.asc()).paginate(
         page, per_page=100,#current_app.config['FLASKY_POSTS_PER_PAGE'],
         error_out=False)
         scrums = pagination.items
