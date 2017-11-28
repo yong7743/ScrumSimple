@@ -15,7 +15,8 @@
         autoclose: true,
         daysOfWeekHighlighted: "0,6",
         format: "yyyy/mm/dd",
-        language: "zh-CN"
+        language: "zh-CN",
+        todayHighlight: true
     });
     </script>
 {% endblock %}
@@ -28,7 +29,7 @@
 </div>
 
 <div class="Report-form">
-    {{ wtf.quick_form(form) }}
+    {{ wtf.quick_form(form)}}
 </div>
 
 <div>

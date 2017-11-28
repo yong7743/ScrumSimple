@@ -1,28 +1,16 @@
 # team-status
 
-pip install -r requirments/common.txt
+## Quick start
 
-python run.py runserver
+pip install -r requirments/dev.txt
 
+python run.py --host=0.0.0.0
 
 ---
 
-users
-- id
-- username
-- password
-- role
+## Details
 
-
-reports
-- id
-- user_id
-- date
-- today_report
-- position(optional)
-
-
-Notes:
+### Run
 
 create run and run shell in pycharm
 
@@ -36,6 +24,7 @@ script: C:\Projects\team-status\manage.py
 parameters: runserver
 env: DEV_DATABASE_URL=sqlite:///c:/projects/team-status/data/data-dev.sqlite;PYTHONUNBUFFERED=1
 
+### Init Database
 
 python manage.py db init
 python manage.py db migrate -m "init"
@@ -46,8 +35,7 @@ db.drop_all()
 db.create_all() 
 to init the database
 
+### Next
 
-数据库迁移
-数据导出
-权限与角色
-其他用户数据浏览
+- More choices for authorization
+- Associate github issues and commit
