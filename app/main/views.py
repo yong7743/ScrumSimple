@@ -4,10 +4,18 @@ from flask import Flask, render_template, session, redirect, url_for, flash, cur
 from . import main
 from .forms import ReportForm, LoginForm, ScrumForm
 from flask_login import login_user, logout_user, login_required, current_user
-from ..models import User, Report, GitHubOauth
+from ..models import User, Report, GitHubOauth, Todo
 from .. import db, github
 from datetime import datetime, timedelta
 
+import rethinkdb as r
+import json
+from rethinkdb.errors import RqlRuntimeError, RqlDriverError
+from flask import abort, request, g, jsonify
+
+RDB_HOST =  os.environ.get('RDB_HOST') or 'localhost'
+RDB_PORT = os.environ.get('RDB_PORT') or 28015
+TODO_DB = 'todoapp'
 
 @main.route('/', methods=['GET', 'POST'])
 @login_required
@@ -71,6 +79,13 @@ def scrum():
 #        session.pop('start', None)
 #        session.pop('end', None)
     return render_template("scrum.html", form=form, scrums=scrums, header=header, pagination=pagination)
+
+
+# @main.route('/todos', methdos=['GET', 'POST'])
+# @login_required
+# def get_todos():
+#     selection = list(r.table('todos').run(g.rdb_conn))
+#     return json.dumps(selection)
 
 
 def report_filter(reports, start, end):
@@ -149,6 +164,112 @@ def edit(id):
     form.body.data = report.body
     form.date.data = report.date
     return render_template('edit_report.html', form=form)
+
+
+# @main.before_request
+# def before_request():
+#     try:
+#         g.rdb_conn = r.connect(host=RDB_HOST, port=RDB_PORT, db=TODO_DB)
+#     except RqlDriverError:
+#         abort(503, "No database connection could be established.")
+#
+#
+# @main.teardown_request
+# def teardown_request(exception):
+#     try:
+#         g.rdb_conn.close()
+#     except AttributeError:
+#         pass
+#
+# #### Listing existing todos
+#
+# # To retrieve all existing tasks, we are using
+# # [`r.table`](http://www.rethinkdb.com/api/python/table/)
+# # command to query the database in response to a GET request from the
+# # browser. When `table(table_name)` isn't followed by an additional
+# # command, it returns all documents in the table.
+# #
+# # Running the query returns an iterator that automatically streams
+# # data from the server in efficient batches.
+# @main.route("/todos", methods=['GET'])
+# def get_todos():
+#     selection = list(r.table('todos').run(g.rdb_conn))
+#     return json.dumps(selection)
+#
+# #### Creating a todo
+#
+# # We will create a new todo in response to a POST request to `/todos`
+# # with a JSON payload using
+# # [`table.insert`](http://www.rethinkdb.com/api/python/insert/).
+# #
+# # The `insert` operation returns a single object specifying the number
+# # of successfully created objects and their corresponding IDs:
+# #
+# # ```
+# # {
+# #   "inserted": 1,
+# #   "errors": 0,
+# #   "generated_keys": [
+# #     "773666ac-841a-44dc-97b7-b6f3931e9b9f"
+# #   ]
+# # }
+# # ```
+#
+# @main.route("/todos", methods=['POST'])
+# def new_todo():
+#     inserted = r.table('todos').insert(request.json).run(g.rdb_conn)
+#     return jsonify(id=inserted['generated_keys'][0])
+#
+#
+# #### Retrieving a single todo
+#
+# # Every new task gets assigned a unique ID. The browser can retrieve
+# # a specific task by GETing `/todos/<todo_id>`. To query the database
+# # for a single document by its ID, we use the
+# # [`get`](http://www.rethinkdb.com/api/python/get/)
+# # command.
+# #
+# # Using a task's ID will prove more useful when we decide to update
+# # it, mark it completed, or delete it.
+# @main.route("/todos/<string:todo_id>", methods=['GET'])
+# def get_todo(todo_id):
+#     todo = r.table('todos').get(todo_id).run(g.rdb_conn)
+#     return json.dumps(todo)
+#
+# #### Editing/Updating a task
+#
+# # Updating a todo (editing it or marking it completed) is performed on
+# # a `PUT` request.  To save the updated todo we'll do a
+# # [`replace`](http://www.rethinkdb.com/api/python/replace/).
+# @main.route("/todos/<string:todo_id>", methods=['PUT'])
+# def update_todo(todo_id):
+#     return jsonify(r.table('todos').get(todo_id).replace(request.json)
+#                     .run(g.rdb_conn))
+#
+# # If you'd like the update operation to happen as the result of a
+# # `PATCH` request (carrying only the updated fields), you can use the
+# # [`update`](http://www.rethinkdb.com/api/python/update/)
+# # command, which will merge the JSON object stored in the database
+# # with the new one.
+# @main.route("/todos/<string:todo_id>", methods=['PATCH'])
+# def patch_todo(todo_id):
+#     return jsonify(r.table('todos').get(todo_id).update(request.json)
+#                     .run(g.rdb_conn))
+#
+#
+# #### Deleting a task
+#
+# # To delete a todo item we'll call a
+# # [`delete`](http://www.rethinkdb.com/api/python/delete/)
+# # command on a `DELETE /todos/<todo_id>` request.
+# @main.route("/todos/<string:todo_id>", methods=['DELETE'])
+# def delete_todo(todo_id):
+#     return jsonify(r.table('todos').get(todo_id).delete().run(g.rdb_conn))
+#
+@main.route("/gtd")
+def show_todos():
+    return render_template('todo.html')
+
 
 if __name__ == '__main__':
     pass

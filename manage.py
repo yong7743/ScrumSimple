@@ -20,6 +20,17 @@ from app.models import User, Report
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
+
+import rethinkdb as r
+import json
+from rethinkdb.errors import RqlRuntimeError, RqlDriverError
+from flask import abort, request, g, jsonify
+
+RDB_HOST =  os.environ.get('RDB_HOST') or 'localhost'
+RDB_PORT = os.environ.get('RDB_PORT') or 28015
+TODO_DB = 'todoapp'
+
+
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
@@ -70,6 +81,19 @@ def deploy():
 
     # migrate database to latest revision
     upgrade()
+
+
+@manager.command
+def gtd():
+    connection = r.connect(host=RDB_HOST, port=RDB_PORT)
+    try:
+        r.db_create(TODO_DB).run(connection)
+        r.db(TODO_DB).table_create('todos').run(connection)
+        print('Database setup completed. Now run the app without --setup.')
+    except RqlRuntimeError:
+        print('App database already exists. Run the app without --setup.')
+    finally:
+        connection.close()
 
 
 if __name__ == '__main__':

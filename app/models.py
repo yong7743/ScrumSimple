@@ -108,6 +108,13 @@ class Report(db.Model):
 db.event.listen(Report.body, 'set', Report.on_changed_body)
 
 
+class Todo(db.Model):
+    __tablename__ = 'todos'
+    id = db.Column(db.Integer, primary_key=True)
+    task = db.Column(db.Text)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
