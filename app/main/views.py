@@ -2,9 +2,9 @@ from flask import Flask, request, render_template, make_response,send_file
 import os,sys
 from flask import Flask, render_template, session, redirect, url_for, flash, current_app
 from . import main
-from .forms import ReportForm, LoginForm, ScrumForm
+from .forms import ReportForm, LoginForm, ScrumForm, WeeklyPlanForm
 from flask_login import login_user, logout_user, login_required, current_user
-from ..models import User, Report, GitHubOauth, Todo
+from ..models import User, Report, GitHubOauth, WeeklyPlan
 from .. import db, github
 from datetime import datetime, timedelta
 
@@ -35,6 +35,24 @@ def index():
         error_out=False)
     reports = pagination.items
     return render_template("index.html", form=form, current_time=current_time, reports=reports, pagination=pagination)
+
+
+@main.route('/weekly', methods=['GET', 'POST'])
+@login_required
+def weekly():
+    form = WeeklyPlanForm()
+    if form.validate_on_submit():
+        report = WeeklyPlan(date=form.date.data,
+                        body=form.body.data,
+                        author=current_user._get_current_object())
+        db.session.add(report)
+        return redirect(url_for('.weekly'))
+    page = request.args.get('page', 1, type=int)
+    pagination = WeeklyPlan.query.order_by(WeeklyPlan.date.desc()).paginate(
+        page, per_page=9,
+        error_out=False)
+    reports = pagination.items
+    return render_template("weekly_home.html", form=form, current_time=0, reports=reports, pagination=pagination)
 
 
 @main.route('/help', methods=['GET', 'POST'])

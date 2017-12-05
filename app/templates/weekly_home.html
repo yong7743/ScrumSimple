@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}report{% endblock %}
+{% block page_content %}
+<h4 id="report">Weekly</h4>
+
+{% block scripts %}
+    {{ super() }}
+    {{ pagedown.include_pagedown() }}
+    <script type="text/javascript">
+    $('#date').datepicker({
+        weekStart: 1,
+        autoclose: true,
+        daysOfWeekHighlighted: "0,6",
+        format: "yyyy/mm/dd",
+        language: "zh-CN",
+        todayHighlight: true
+    });
+    </script>
+{% endblock %}
+
+<div class="table-header">
+    <p></p>
+    <p></p>
+    <h4><p style="color:red">Make plans for the target week</p></h4>
+    <p></p>
+</div>
+
+<div class="Weekly-form">
+    {{ wtf.quick_form(form)}}
+</div>
+
+<div>
+    <p></p>
+    <p></p>
+</div>
+
+<div>
+{% include '_weekly_plans.html' %}
+</div>
+
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.index') }}
+</div>
+{% endif %}
+{% endblock %}
