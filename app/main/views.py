@@ -17,6 +17,7 @@ RDB_HOST =  os.environ.get('RDB_HOST') or 'localhost'
 RDB_PORT = os.environ.get('RDB_PORT') or 28015
 TODO_DB = 'todoapp'
 
+
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
@@ -79,13 +80,6 @@ def scrum():
 #        session.pop('start', None)
 #        session.pop('end', None)
     return render_template("scrum.html", form=form, scrums=scrums, header=header, pagination=pagination)
-
-
-# @main.route('/todos', methdos=['GET', 'POST'])
-# @login_required
-# def get_todos():
-#     selection = list(r.table('todos').run(g.rdb_conn))
-#     return json.dumps(selection)
 
 
 def report_filter(reports, start, end):
@@ -166,21 +160,26 @@ def edit(id):
     return render_template('edit_report.html', form=form)
 
 
-# @main.before_request
-# def before_request():
-#     try:
-#         g.rdb_conn = r.connect(host=RDB_HOST, port=RDB_PORT, db=TODO_DB)
-#     except RqlDriverError:
-#         abort(503, "No database connection could be established.")
-#
-#
-# @main.teardown_request
-# def teardown_request(exception):
-#     try:
-#         g.rdb_conn.close()
-#     except AttributeError:
-#         pass
-#
+@main.before_request
+def before_request():
+    try:
+        g.rdb_conn = r.connect(host=RDB_HOST, port=RDB_PORT, db=TODO_DB)
+    except RqlDriverError:
+        abort(503, "No database connection could be established.")
+
+
+@main.teardown_request
+def teardown_request(exception):
+    try:
+        g.rdb_conn.close()
+    except AttributeError:
+       pass
+
+
+@main.route("/gtd")
+def show_todos():
+    return render_template('todo.html')
+
 # #### Listing existing todos
 #
 # # To retrieve all existing tasks, we are using
@@ -191,10 +190,10 @@ def edit(id):
 # #
 # # Running the query returns an iterator that automatically streams
 # # data from the server in efficient batches.
-# @main.route("/todos", methods=['GET'])
-# def get_todos():
-#     selection = list(r.table('todos').run(g.rdb_conn))
-#     return json.dumps(selection)
+@main.route("/todos", methods=['GET'])
+def get_todos():
+    selection = list(r.table('todos').run(g.rdb_conn))
+    return json.dumps(selection)
 #
 # #### Creating a todo
 #
@@ -215,11 +214,11 @@ def edit(id):
 # # }
 # # ```
 #
-# @main.route("/todos", methods=['POST'])
-# def new_todo():
-#     inserted = r.table('todos').insert(request.json).run(g.rdb_conn)
-#     return jsonify(id=inserted['generated_keys'][0])
-#
+@main.route("/todos", methods=['POST'])
+def new_todo():
+    inserted = r.table('todos').insert(request.json).run(g.rdb_conn)
+    return jsonify(id=inserted['generated_keys'][0])
+
 #
 # #### Retrieving a single todo
 #
@@ -231,10 +230,10 @@ def edit(id):
 # #
 # # Using a task's ID will prove more useful when we decide to update
 # # it, mark it completed, or delete it.
-# @main.route("/todos/<string:todo_id>", methods=['GET'])
-# def get_todo(todo_id):
-#     todo = r.table('todos').get(todo_id).run(g.rdb_conn)
-#     return json.dumps(todo)
+@main.route("/todos/<string:todo_id>", methods=['GET'])
+def get_todo(todo_id):
+    todo = r.table('todos').get(todo_id).run(g.rdb_conn)
+    return json.dumps(todo)
 #
 # #### Editing/Updating a task
 #
@@ -251,10 +250,10 @@ def edit(id):
 # # [`update`](http://www.rethinkdb.com/api/python/update/)
 # # command, which will merge the JSON object stored in the database
 # # with the new one.
-# @main.route("/todos/<string:todo_id>", methods=['PATCH'])
-# def patch_todo(todo_id):
-#     return jsonify(r.table('todos').get(todo_id).update(request.json)
-#                     .run(g.rdb_conn))
+@main.route("/todos/<string:todo_id>", methods=['PATCH'])
+def patch_todo(todo_id):
+    return jsonify(r.table('todos').get(todo_id).update(request.json)
+                    .run(g.rdb_conn))
 #
 #
 # #### Deleting a task
@@ -262,13 +261,10 @@ def edit(id):
 # # To delete a todo item we'll call a
 # # [`delete`](http://www.rethinkdb.com/api/python/delete/)
 # # command on a `DELETE /todos/<todo_id>` request.
-# @main.route("/todos/<string:todo_id>", methods=['DELETE'])
-# def delete_todo(todo_id):
-#     return jsonify(r.table('todos').get(todo_id).delete().run(g.rdb_conn))
-#
-@main.route("/gtd")
-def show_todos():
-    return render_template('todo.html')
+@main.route("/todos/<string:todo_id>", methods=['DELETE'])
+def delete_todo(todo_id):
+    return jsonify(r.table('todos').get(todo_id).delete().run(g.rdb_conn))
+
 
 
 if __name__ == '__main__':
