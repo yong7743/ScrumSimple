@@ -187,7 +187,7 @@ def weekly_edit(id):
         report.date = form.date.data
         db.session.add(report)
         flash('The post has been updated.')
-        return redirect(url_for('.weekly', id=report.id))
+        return redirect(url_for('.weeklys', id=report.id))
     form.body.data = report.body
     form.date.data = report.date
     return render_template('edit_weekly.html', form=form)
