@@ -41,6 +41,7 @@ class User(UserMixin, db.Model):
     github_access_token = db.Column(db.String(200), unique=True)
     github_id = db.Column(db.Integer, unique=True)
     reports = db.relationship('Report', backref='author', lazy='dynamic')
+    weeklys = db.relationship('WeeklyPlan', backref='author', lazy='dynamic')
 
     @staticmethod
     def generate_fake(count=100):
@@ -106,6 +107,15 @@ class Report(db.Model):
             tags=allowed_tags, strip=True))
 
 db.event.listen(Report.body, 'set', Report.on_changed_body)
+
+
+class WeeklyPlan(db.Model):
+    __tablename__ = 'weeklys'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
 @login_manager.user_loader

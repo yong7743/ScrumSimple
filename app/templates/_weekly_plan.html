@@ -1,0 +1,32 @@
+<ul class="reports">
+    {% for report in reports %}
+    <li class="report">
+        <div class="post-thumbnail">
+            <a href="{{ url_for('.user', username=report.author.username) }}">
+                <img class="img-rounded profile-thumbnail" src="{{ report.author.gravatar(size=40) }}">
+            </a>
+        </div>
+        <div class="post-content">
+            <div class="post-date">{{ report.date }}</div>
+            <div class="post-author"><a href="{{ url_for('.user', username=report.author.username) }}">{{ report.author.username }}</a></div>
+            <div class="post-body">
+                {% if report.body_html %}
+                    {{ report.body_html | safe }}
+                {% else %}
+                    {{ report.body }}
+                {% endif %}
+            </div>
+            {% if current_user == report.author %}
+                <a href="{{ url_for('.weeklyedit', id=report.id) }}">
+                    <span class="label label-primary">Edit</span>
+                </a>
+            {% endif %}
+            <div class="post-footer">
+                <a href="{{ url_for('.weeklyplan', id=report.id) }}">
+                    <span class="label label-default">Permalink</span>
+                </a>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>

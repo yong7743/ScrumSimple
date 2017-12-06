@@ -15,6 +15,12 @@ class ReportForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class WeeklyPlanForm(FlaskForm):
+    date = DateField('Please select a date in target week?', default='', validators=[Required()], format='%Y/%m/%d', widget=widgets.DatePickerWidget())
+    body = PageDownField("Plans for this week?", validators=[Required()])
+    submit = SubmitField('Submit')
+
+
 class LoginForm(FlaskForm):
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')

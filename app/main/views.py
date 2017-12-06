@@ -2,9 +2,9 @@ from flask import Flask, request, render_template, make_response,send_file
 import os,sys
 from flask import Flask, render_template, session, redirect, url_for, flash, current_app
 from . import main
-from .forms import ReportForm, LoginForm, ScrumForm
+from .forms import ReportForm, ScrumForm, WeeklyPlanForm
 from flask_login import login_user, logout_user, login_required, current_user
-from ..models import User, Report, GitHubOauth
+from ..models import User, Report, GitHubOauth, WeeklyPlan
 from .. import db, github
 from datetime import datetime, timedelta
 
@@ -26,6 +26,24 @@ def index():
         error_out=False)
     reports = pagination.items
     return render_template("index.html", form=form, current_time=current_time, reports=reports, pagination=pagination)
+
+
+@main.route('/weeklys', methods=['GET', 'POST'])
+@login_required
+def weeklys():
+    form = WeeklyPlanForm()
+    if form.validate_on_submit():
+        report = WeeklyPlan(date=form.date.data,
+                        body=form.body.data,
+                        author=current_user._get_current_object())
+        db.session.add(report)
+        return redirect(url_for('.weeklys'))
+    page = request.args.get('page', 1, type=int)
+    pagination = WeeklyPlan.query.order_by(WeeklyPlan.date.desc()).paginate(
+        page, per_page=9,
+        error_out=False)
+    reports = pagination.items
+    return render_template("weekly_home.html", form=form, current_time=0, reports=reports, pagination=pagination)
 
 
 @main.route('/help', methods=['GET', 'POST'])
@@ -116,6 +134,12 @@ def report(id):
     return render_template('report.html', reports=[report])
 
 
+@main.route('/weeklyplan/<int:id>')
+def weekly_plan(id):
+    report = WeeklyPlan.query.get_or_404(id)
+    return render_template('weekly_plan.html', reports=[report])
+
+
 @main.route("/login", methods=['GET', 'POST'])
 def login():
     return github.authorize()
@@ -149,6 +173,24 @@ def edit(id):
     form.body.data = report.body
     form.date.data = report.date
     return render_template('edit_report.html', form=form)
+
+
+@main.route('/weeklyedit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def weekly_edit(id):
+    report = WeeklyPlan.query.get_or_404(id)
+    if current_user != report.author:
+        return "Not allow!"
+    form = WeeklyPlanForm()
+    if form.validate_on_submit():
+        report.body = form.body.data
+        report.date = form.date.data
+        db.session.add(report)
+        flash('The post has been updated.')
+        return redirect(url_for('.weekly', id=report.id))
+    form.body.data = report.body
+    form.date.data = report.date
+    return render_template('edit_weekly.html', form=form)
 
 if __name__ == '__main__':
     pass

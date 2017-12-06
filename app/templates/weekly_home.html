@@ -4,10 +4,7 @@
 
 {% block title %}report{% endblock %}
 {% block page_content %}
-
-
-
-<h4 id="report">Report</h4>
+<h4 id="report">Weekly</h4>
 
 {% block scripts %}
     {{ super() }}
@@ -27,11 +24,11 @@
 <div class="table-header">
     <p></p>
     <p></p>
-    <h4><p style="color:red">Now: {{ moment(current_time).format('LLL') }}. Sprint 6</p></h4>
+    <h4><p style="color:red">Make plans for the target week</p></h4>
     <p></p>
 </div>
 
-<div class="Report-form">
+<div class="Weekly-form">
     {{ wtf.quick_form(form)}}
 </div>
 
@@ -41,12 +38,12 @@
 </div>
 
 <div>
-{% include '_reports.html' %}
+{% include '_weekly_plans.html' %}
 </div>
 
 {% if pagination %}
 <div class="pagination">
-    {{ macros.pagination_widget(pagination, '.index') }}
+    {{ macros.pagination_widget(pagination, '.weeklys') }}
 </div>
 {% endif %}
 {% endblock %}
