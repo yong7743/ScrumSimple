@@ -117,6 +117,13 @@ class WeeklyPlan(db.Model):
     body_html = db.Column(db.Text)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+       target.body_html = bleach.linkify(bleach.clean(
+           markdown(value, output_format='html'),
+           strip=True))
+
+db.event.listen(WeeklyPlan.body, 'set', WeeklyPlan.on_changed_body)
 
 @login_manager.user_loader
 def load_user(user_id):
