@@ -27,7 +27,9 @@
 <div class="table-header">
     <p></p>
     <p></p>
-    <h4><p style="color:red">Now: {{ moment(current_time).format('LLL') }}. Sprint 7</p></h4>
+    {% if current_time%}
+        <h4><p style="color:red">Now: {{ moment(current_time).format('LLL') }}. Sprint 7</p></h4>
+    {% endif %}
     <p></p>
 </div>
 

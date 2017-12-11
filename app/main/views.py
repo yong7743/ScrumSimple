@@ -175,6 +175,19 @@ def edit(id):
     return render_template('edit_report.html', form=form)
 
 
+@main.route('/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete(id):
+    report = Report.query.get_or_404(id)
+    if current_user != report.author:
+        return "Not allow!"
+    else:
+        form = ReportForm()
+        db.session.delete(report)
+        db.session.commit()
+        return index()
+
+
 @main.route('/weeklyedit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def weekly_edit(id):
@@ -191,6 +204,19 @@ def weekly_edit(id):
     form.body.data = report.body
     form.date.data = report.date
     return render_template('edit_weekly.html', form=form)
+
+
+@main.route('/weeklydelete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def weekly_delete(id):
+    report = WeeklyPlan.query.get_or_404(id)
+    if current_user != report.author:
+        return "Not allow!"
+    else:
+        db.session.delete(report)
+        db.session.commit()
+        return weeklys()
+
 
 if __name__ == '__main__':
     pass
