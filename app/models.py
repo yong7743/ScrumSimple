@@ -64,7 +64,18 @@ class User(UserMixin, db.Model):
             self.avatar_hash = hashlib.md5(
                 self.email.encode('utf-8')).hexdigest()
 
+    def _photo_from_id(self, size=100, default='identicon', rating='g'):
+        if self.github_id is not None:
+            url = 'https://avatars.githubusercontent.com/u'
+            return '{url}/{id}?s={size}&d={default}&r={rating}'.format(
+            url=url, id=self.github_id, size=size, default=default, rating=rating)
+        return None
+
     def gravatar(self, size=100, default='identicon', rating='g'):
+        photo_url = self._photo_from_id(size, default, rating)
+        if photo_url is not None:
+            return photo_url
+
         if request.is_secure:
             url = 'https://secure.gravatar.com/avatar'
         else:

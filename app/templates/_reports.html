@@ -3,7 +3,7 @@
     <li class="report">
         <div class="post-thumbnail">
             <a href="{{ url_for('.user', username=report.author.username) }}">
-                <img class="img-rounded profile-thumbnail" src="{{ report.author.gravatar(size=40) }}">
+                <img class="img-rounded profile-thumbnail" src="{{ report.author.gravatar(size=40) }}" width="40">
             </a>
         </div>
         <div class="post-content">
