@@ -100,6 +100,17 @@ class User(UserMixin, db.Model):
         return '<User %r>' % self.username
 
 
+def add_url_for_issue(matched):
+    base_url = "https://devtopia.esri.com/runtime/arcgis-earth/issues/"
+    number = str(matched.group(0)[1:])
+    return "[#" + number + "](" + base_url + number + ")"
+
+
+def replace_issue(body):
+    import re
+    return re.sub('#[0-9]{1,}', add_url_for_issue, body)
+
+
 class Report(db.Model):
      __tablename__ = 'reports'
      id = db.Column(db.Integer, primary_key=True)
@@ -114,7 +125,7 @@ class Report(db.Model):
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
                         'h1', 'h2', 'h3', 'p']
          target.body_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'),
+            markdown(replace_issue(value), output_format='html'),
             tags=allowed_tags, strip=True))
 
 db.event.listen(Report.body, 'set', Report.on_changed_body)
@@ -131,7 +142,7 @@ class WeeklyPlan(db.Model):
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
        target.body_html = bleach.linkify(bleach.clean(
-           markdown(value, output_format='html'),
+           markdown(replace_issue(value), output_format='html'),
            strip=True))
 
 db.event.listen(WeeklyPlan.body, 'set', WeeklyPlan.on_changed_body)
