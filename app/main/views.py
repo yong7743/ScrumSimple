@@ -190,7 +190,7 @@ def delete(id):
         form = ReportForm()
         db.session.delete(report)
         db.session.commit()
-        return reports()
+        return redirect(request.args.get('next') or url_for('main.reports'))
 
 
 @main.route('/weeklyedit/<int:id>', methods=['GET', 'POST'])
@@ -220,7 +220,7 @@ def weekly_delete(id):
     else:
         db.session.delete(report)
         db.session.commit()
-        return weeklys()
+        return redirect(request.args.get('next') or url_for('main.weeklys'))
 
 
 if __name__ == '__main__':
