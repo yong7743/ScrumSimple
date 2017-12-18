@@ -12,6 +12,12 @@ from datetime import datetime, timedelta
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
+    return render_template("index.html")
+
+
+@main.route('/reports', methods=['GET', 'POST'])
+@login_required
+def reports():
     current_time = datetime.utcnow()
     form = ReportForm()
     if form.validate_on_submit():
@@ -19,13 +25,13 @@ def index():
                         body=form.body.data,
                         author=current_user._get_current_object())
         db.session.add(report)
-        return redirect(url_for('.index'))
+        return redirect(url_for('.reports'))
     page = request.args.get('page', 1, type=int)
     pagination = Report.query.order_by(Report.date.desc()).paginate(
         page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
         error_out=False)
     reports = pagination.items
-    return render_template("index.html", form=form, current_time=current_time, reports=reports, pagination=pagination)
+    return render_template("reports.html", form=form, current_time=current_time, reports=reports, pagination=pagination)
 
 
 @main.route('/weeklys', methods=['GET', 'POST'])
@@ -111,7 +117,7 @@ def user(username):
 @main.route('/github-callback')
 @github.authorized_handler
 def authorized(oauth_token):
-    next_url = request.args.get('.next') or url_for('.index')
+    next_url = request.args.get('.next') or url_for('.reports')
     if oauth_token is None:
         flash("Authorization failed.")
         return redirect(next_url)
@@ -125,7 +131,7 @@ def authorized(oauth_token):
     db.session.add(user)
     db.session.commit()
     login_user(user)
-    return redirect(request.args.get('next') or url_for('main.index'))
+    return redirect(request.args.get('next') or url_for('main.reports'))
 
 
 @main.route('/report/<int:id>')
@@ -154,7 +160,7 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out.')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.reports'))
 
 
 @main.route('/edit/<int:id>', methods=['GET', 'POST'])
@@ -185,7 +191,7 @@ def delete(id):
         form = ReportForm()
         db.session.delete(report)
         db.session.commit()
-        return index()
+        return reports()
 
 
 @main.route('/weeklyedit/<int:id>', methods=['GET', 'POST'])
