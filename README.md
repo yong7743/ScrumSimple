@@ -95,3 +95,9 @@ env: DEV_DATABASE_URL=sqlite:///c:/projects/team-status/data/data-dev.sqlite;PYT
 ## Note
 
 非商用软件，由Flask Web开发 - 基于Python的Web应用开发实战 一书中附带的代码修改而来。
+
+
+
+各部分源码地址：
+- [home page](https://github.com/BlackrockDigital/startbootstrap-stylish-portfolio)
+- [Main](https://github.com/miguelgrinberg/flasky)
