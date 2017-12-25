@@ -45,7 +45,7 @@ def weeklys():
         return redirect(url_for('.weeklys'))
     page = request.args.get('page', 1, type=int)
     pagination = WeeklyPlan.query.order_by(WeeklyPlan.date.desc()).paginate(
-        page, per_page=9,
+        page, per_page=12,
         error_out=False)
     reports = pagination.items
     return render_template("weekly_home.html", form=form, current_time=0, reports=reports, pagination=pagination)
