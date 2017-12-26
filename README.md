@@ -1,20 +1,55 @@
-# team-status
+# Scrum Simple
 
+目前Esri的ArcGIS Earth在使用该工具进行团队组员作为辅助的scrum工具，希望能将整个团队开发过程系统化流程化。
+
+Esri's ArcGIS Earth is currently using this tool as a team scrum tool supporting the team, hoping to systematize the entire team development process.
+
+
+## 目前的界面 
+
+首页
+
+http://localhost:5000/
+
+<img src="https://user-images.githubusercontent.com/5510943/34347653-2511db5c-ea40-11e7-8563-a702b8fa07c4.png" alt="Drawing" width="480"/>
+
+点击导航到其他页面
+
+<img src="https://user-images.githubusercontent.com/5510943/34347656-2a609238-ea40-11e7-9bc3-9ff8a8c7b0c1.png" alt="Drawing" width="480"/>
+
+
+每天需要写自己做的事情，这部分会集中在这个页面显示。
+
+http://localhost:5000/reports
+
+<img src="https://user-images.githubusercontent.com/5510943/34347662-2f5d927c-ea40-11e7-8cbf-174d532e19f7.png" alt="Drawing" width="480"/>
+
+组员的用户页面：
+
+http://localhost:5000/user/Ben%20Tan
+
+<img src="https://user-images.githubusercontent.com/5510943/34347665-38566426-ea40-11e7-8341-c8b73d417be9.png" alt="Drawing" width="480"/>
+
+Earth组每周需要把每一个组员的工作内容汇报给其他相关团队。这个页面会根据组员每天填写的内容生成表格，便于邮件发送。
+
+http://localhost:5000/scrum
+
+<img src="https://user-images.githubusercontent.com/5510943/34347670-3d05dda8-ea40-11e7-83d1-cfd386bd8c04.png" alt="Drawing" width="480"/>
+
+Earth组每周一的时候还会计划本周的工作，这个版块的UI还在开发中，暂无截图。
 
 
 ## How to use it
-
-目前Esri的ArcGIS Earth在使用该工具进行团队组员状态跟踪。
-
 
 
 ### Login
 
 使用GitHub账号登陆，会要求github的公开数据访问权限。
 
-登陆之后，页面右上角会
+登陆之后，页面右上角会显示你的头像。
 
-### Home tab
+
+### Reports tab
 
 - 可以填写自己今天做的事情
 - 查看team member每天做的事情
