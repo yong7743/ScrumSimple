@@ -1,12 +1,13 @@
 <ul class="reports">
     {% for report in weeklys %}
+    <p></p>
     <li class="report">
         <div class="post-thumbnail">
             <a href="{{ url_for('.user', username=report.author.username) }}">
                 <img class="img-rounded profile-thumbnail" src="{{ report.author.gravatar(size=40) }}" width="40" />
             </a>
         </div>
-        <div class="post-content">
+        <div class="plan-content">
             <div class="post-date">{{ report.date }}</div>
             <div class="post-author"><a href="{{ url_for('.user', username=report.author.username) }}">{{ report.author.username }}</a></div>
             <div class="post-body">
