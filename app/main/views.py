@@ -110,11 +110,9 @@ def user(username):
         error_out=False)
     rpts = pagination.items
 
-    wpls = WeeklyPlan.query.filter_by(author_id=usr.id).all()#.order_by(WeeklyPlan.date.desc())
-
+    wpls = WeeklyPlan.query.filter_by(author_id=usr.id).order_by(WeeklyPlan.date.desc()).all()
     wpln_index = min(2, len(wpls))
     wpls = wpls[:wpln_index]
-    print(len(wpls))
     return render_template('user.html', user=usr, reports=rpts, weeklys = wpls,
                            pagination=pagination)
 
