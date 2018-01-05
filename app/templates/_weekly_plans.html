@@ -1,5 +1,5 @@
 <ul class="reports">
-    {% for report in reports %}
+    {% for report in weeklys %}
     <li class="report">
         <div class="post-thumbnail">
             <a href="{{ url_for('.user', username=report.author.username) }}">

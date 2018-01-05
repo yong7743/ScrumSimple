@@ -10,8 +10,19 @@
         <h1>{{ user.username }}</h1>
         <h2>{{ user.email }}</h2>
     </div>
+
+    {% if weeklys %}
+    <hr>
+    <div class="weeklyplans">
+        <h3>Recent two weeks' plans:</h3>
+        {% include '_weekly_plans.html' %}
+   </div>
+    {% endif %}
+
+    {% if reports %}
+    <hr>
     <div class="reports">
-        <h3>Reports by {{ user.username }}</h3>
+        <h3>Reports:</h3>
         {% include '_reports.html' %}
         {% if pagination %}
         <div class="pagination">
@@ -19,5 +30,7 @@
         </div>
         {% endif %}
     </div>
+    {% endif %}
+
 </div>
 {% endblock %}

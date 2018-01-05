@@ -141,9 +141,12 @@ class WeeklyPlan(db.Model):
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
-       target.body_html = bleach.linkify(bleach.clean(
-           markdown(replace_issue(value), output_format='html'),
-           strip=True))
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                        'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(replace_issue(value), output_format='html'),
+            tags=allowed_tags, strip=True))
 
 db.event.listen(WeeklyPlan.body, 'set', WeeklyPlan.on_changed_body)
 

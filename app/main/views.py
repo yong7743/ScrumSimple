@@ -20,17 +20,17 @@ def reports():
     current_time = datetime.utcnow()
     form = ReportForm()
     if form.validate_on_submit():
-        report = Report(date=form.date.data,
+        rpt = Report(date=form.date.data,
                         body=form.body.data,
                         author=current_user._get_current_object())
-        db.session.add(report)
+        db.session.add(rpt)
         return redirect(url_for('.reports'))
     page = request.args.get('page', 1, type=int)
     pagination = Report.query.order_by(Report.date.desc()).paginate(
         page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
         error_out=False)
-    reports = pagination.items
-    return render_template("reports.html", form=form, current_time=current_time, reports=reports, pagination=pagination)
+    rpts = pagination.items
+    return render_template("reports.html", form=form, current_time=current_time, reports=rpts, pagination=pagination)
 
 
 @main.route('/weeklys', methods=['GET', 'POST'])
@@ -47,23 +47,13 @@ def weeklys():
     pagination = WeeklyPlan.query.order_by(WeeklyPlan.date.desc()).paginate(
         page, per_page=12,
         error_out=False)
-    reports = pagination.items
-    return render_template("weekly_home.html", form=form, current_time=0, reports=reports, pagination=pagination)
+    wlps = pagination.items
+    return render_template("weekly_home.html", form=form, current_time=0, weeklys=wlps, pagination=pagination)
 
 
 @main.route('/help', methods=['GET', 'POST'])
 def help():
     return render_template("help.html")
-
-
-@main.route('/users', methods=['GET', 'POST'])
-def users():
-    page = request.args.get('page', 1, type=int)
-    pagination = User.query.order_by(User.username.asc()).paginate(
-        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
-        error_out=False)
-    users = pagination.items
-    return render_template("users.html", users=users, pagination=pagination)
 
 
 @main.route('/scrum', methods=['GET', 'POST'])
@@ -101,15 +91,31 @@ def report_filter(reports, start, end):
     return current
 
 
-@main.route('/user/<username>')
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
+@main.route('/users', methods=['GET', 'POST'])
+def users():
     page = request.args.get('page', 1, type=int)
-    pagination = user.reports.order_by(Report.date.desc()).paginate(
+    pagination = User.query.order_by(User.username.asc()).paginate(
         page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
         error_out=False)
-    reports = pagination.items
-    return render_template('user.html', user=user, reports=reports,
+    users = pagination.items
+    return render_template("users.html", users=users, pagination=pagination)
+
+
+@main.route('/user/<username>')
+def user(username):
+    usr = User.query.filter_by(username=username).first_or_404()
+    page = request.args.get('page', 1, type=int)
+    pagination = usr.reports.order_by(Report.date.desc()).paginate(
+        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+        error_out=False)
+    rpts = pagination.items
+
+    wpls = WeeklyPlan.query.filter_by(author_id=usr.id).all()#.order_by(WeeklyPlan.date.desc())
+
+    wpln_index = min(2, len(wpls))
+    wpls = wpls[:wpln_index]
+    print(len(wpls))
+    return render_template('user.html', user=usr, reports=rpts, weeklys = wpls,
                            pagination=pagination)
 
 
