@@ -117,26 +117,6 @@ def user(username):
                            pagination=pagination)
 
 
-@main.route('/github-callback')
-@github.authorized_handler
-def authorized(oauth_token):
-    next_url = request.args.get('.next') or url_for('.reports')
-    if oauth_token is None:
-        flash("Authorization failed.")
-        return redirect(next_url)
-    github_id, github_login, username, email = GitHubOauth.get_user_info(github=github, access_token=oauth_token)
-    user = User.query.filter_by(github_id=github_id).first()
-    if user is None:
-        if username is None:
-            username = github_login
-        user = User(username=username, email=email, github_id=github_id, github_access_token=oauth_token)
-    user.github_access_token = oauth_token
-    db.session.add(user)
-    db.session.commit()
-    login_user(user)
-    return redirect(request.args.get('next') or url_for('main.reports'))
-
-
 @main.route('/report/<int:id>')
 def report(id):
     report = Report.query.get_or_404(id)
@@ -147,23 +127,6 @@ def report(id):
 def weekly_plan(id):
     report = WeeklyPlan.query.get_or_404(id)
     return render_template('weekly_plan.html', reports=[report])
-
-
-@main.route("/login", methods=['GET', 'POST'])
-def login():
-    return github.authorize()
-#    form = LoginForm()
-#    if form.validate_on_submit():
-#        return github.authorize()
-#    return render_template("login.html", form=form)
-
-
-@main.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('You have been logged out.')
-    return redirect(url_for('main.reports'))
 
 
 @main.route('/edit/<int:id>', methods=['GET', 'POST'])
