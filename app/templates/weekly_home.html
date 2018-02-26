@@ -25,12 +25,15 @@
 <div class=proctor>
     <p></p>
     <p></p>
-    <h4><p>
-        <font color="red">Duty on </font>
-        <a href="https://community.esri.com/groups/arcgis-earth">GeoNet</a>
-        <a>: </a>
-    </p></h4>
-    <p><font>Jasmine, Mandy, Xuewen, Yongwei, Zhijun, Shengtao, Ben, Guodong, Pengfei,</font><font color="red">Chao,</font><font>  Lu, Zhe</font></p>
+    <p></p>
+    <p></p>
+    <font color="red">Duty on </font>
+    <a href="https://community.esri.com/groups/arcgis-earth">GeoNet</a>
+    <a>: </a>
+    {% if current_time%}
+        <h4><p style="color:black">{{ current_time }}</p></h4>
+    {% endif %}
+    <p></p>
     <p></p>
     <p></p>
     <p></p>

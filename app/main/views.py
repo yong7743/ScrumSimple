@@ -6,7 +6,8 @@ from .forms import ReportForm, ScrumForm, WeeklyPlanForm
 from flask_login import login_user, logout_user, login_required, current_user
 from ..models import User, Report, GitHubOauth, WeeklyPlan
 from .. import db, github
-from datetime import datetime, timedelta
+from .extension.duty_schedule import DutySchedule
+import datetime
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -17,7 +18,7 @@ def index():
 @main.route('/reports', methods=['GET', 'POST'])
 @login_required
 def reports():
-    current_time = datetime.utcnow()
+    current_time = datetime.datetime.utcnow()
     form = ReportForm()
     if form.validate_on_submit():
         rpt = Report(date=form.date.data,
@@ -31,6 +32,14 @@ def reports():
         error_out=False)
     rpts = pagination.items
     return render_template("reports.html", form=form, current_time=current_time, reports=rpts, pagination=pagination)
+
+
+def get_duty_text():
+    dutySchedule = DutySchedule("e:/team-status/app/main/extension/member.json", datetime.date(2018, 2, 19))
+    duty_name = dutySchedule.get_member_onduty(datetime.date.today())
+    members_name = dutySchedule.get_members()
+    text = duty_name + "! o(*￣︶￣*)o ~~~~ Orders:" + ', '.join(members_name)
+    return text
 
 
 @main.route('/weeklys', methods=['GET', 'POST'])
@@ -48,7 +57,13 @@ def weeklys():
         page, per_page=12,
         error_out=False)
     wlps = pagination.items
-    return render_template("weekly_home.html", form=form, current_time=0, weeklys=wlps, pagination=pagination)
+    text = ""
+    try:
+        text = get_duty_text()
+    except ValueError:
+        print(ValueError)
+
+    return render_template("weekly_home.html", form=form, current_time=text, weeklys=wlps, pagination=pagination)
 
 
 @main.route('/help', methods=['GET', 'POST'])
@@ -72,9 +87,9 @@ def scrum():
     page = request.args.get('page', 1, type=int)
     if 'start' in session and 'end' in session:
         #Wed, 01 Nov 2017 00:00:00 GM
-        start = datetime.strptime(session['start'], '%d/%m/%Y')
-        start = start - timedelta(days = 1)
-        end = datetime.strptime(session['end'], '%d/%m/%Y')
+        start = datetime.datetime.strptime(session['start'], '%d/%m/%Y')
+        start = start - datetime.timedelta(days = 1)
+        end = datetime.datetime.strptime(session['end'], '%d/%m/%Y')
         header = "Scrums form %s to %s" % (session['start'],session['end'] )
         pagination = Report.query.filter(
             Report.date.between(start, end)).order_by(Report.author_id.asc(), Report.date.asc()).paginate(
