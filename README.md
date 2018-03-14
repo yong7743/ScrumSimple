@@ -87,13 +87,13 @@ Earth组每周一的时候还会计划本周的工作，这个版块的UI还在�
 
 
 
-## Deploy
+## 部署
 
-### Install dependences
+### 安装依赖 Install dependences
 
 pip install -r requirments/dev.txt
 
-### Init Database
+### 初始化数据库 Init Database
 
 python manage.py db init
 python manage.py db migrate -m "init"
@@ -104,7 +104,7 @@ db.drop_all()
 db.create_all() 
 to init the database
 
-### Run
+### 运行 Run
 
 create run and run shell in pycharm
 
@@ -119,10 +119,19 @@ parameters: runserver
 env: DEV_DATABASE_URL=sqlite:///c:/projects/team-status/data/data-dev.sqlite;PYTHONUNBUFFERED=1
 
 
+### 实验性质功能
 
-### Next
+#### 词云统计
 
-- More choices for authorization
+- [scrum word cloud wiki](https://github.com/bentan2013/ScrumSimple/wiki/Scrum-Word-Cloud)
+
+<img src="https://camo.githubusercontent.com/bf03f284e6c89e56b52e7367898f4f489e2b811f/687474703a2f2f6f72343568756e69312e626b742e636c6f7564646e2e636f6d2f31382d332d31342f33323039353930362e6a7067" alt="Drawing" width="480"/>
+
+
+
+### 待办事项Next
+
+- 用户名密码的登陆方式，以减少github验证的网络延时。More choices for authorization
 - Associate github issues and commit
 
 
