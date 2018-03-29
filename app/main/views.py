@@ -150,8 +150,8 @@ def weekly_plan(id):
 @login_required
 def edit(id):
     report = Report.query.get_or_404(id)
-    if current_user != report.author:
-        return "Not allow!"
+    if current_user != report.author and not current_user.is_administrator():
+        return "Not allow! Only current user and administrator can edit it"
     form = ReportForm()
     if form.validate_on_submit():
         report.body = form.body.data
@@ -168,8 +168,8 @@ def edit(id):
 @login_required
 def delete(id):
     report = Report.query.get_or_404(id)
-    if current_user != report.author:
-        return "Not allow!"
+    if current_user != report.author and not current_user.is_administrator():
+        return "Not allow! Only current user and administrator can delete it"
     else:
         form = ReportForm()
         db.session.delete(report)

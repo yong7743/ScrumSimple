@@ -16,7 +16,7 @@
                     {{ report.body }}
                 {% endif %}
             </div>
-            {% if current_user == report.author %}
+            {% if current_user == report.author or current_user.is_administrator() %}
                 <a href="{{ url_for('.edit', id=report.id) }}">
                     <span class="label label-primary">Edit</span>
                 </a>
