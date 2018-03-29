@@ -64,10 +64,11 @@ def register():
         user = User(email=form.email.data,
                     username=form.username.data,
                     password=form.password.data,
-                    github_id=0, github_access_token="123")
+                    github_id=None, github_access_token=None)
         db.session.add(user)
         db.session.commit()
         flash('You have created the account now.')
+        login_user(user)
         return redirect(url_for('main.index'))
     return render_template('auth/register.html', form=form)
 
