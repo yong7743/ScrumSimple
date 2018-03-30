@@ -9,8 +9,9 @@
     <div class="profile-header">
         <h1>{{ user.username }}</h1>
         <h2>{{ user.email }}</h2>
-
+        {% if current_user == user %}
         <a href="{{ url_for('auth.change_password') }}">Change Password</a>
+        {% endif %}
     </div>
 
     {% if weeklys %}
