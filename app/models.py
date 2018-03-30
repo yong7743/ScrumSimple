@@ -171,7 +171,7 @@ class User(UserMixin, db.Model):
 
     def gravatar(self, size=100, default='identicon', rating='g'):
         photo_url = self._photo_from_id(size, default, rating)
-        if photo_url is not None and self.id != 15:
+        if photo_url is not None:
             return photo_url
 
         if request.is_secure:
