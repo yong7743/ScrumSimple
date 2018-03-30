@@ -9,6 +9,8 @@
     <div class="profile-header">
         <h1>{{ user.username }}</h1>
         <h2>{{ user.email }}</h2>
+
+        <a href="{{ url_for('auth.change_password') }}">Change Password</a>
     </div>
 
     {% if weeklys %}

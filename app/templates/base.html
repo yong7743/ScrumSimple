@@ -3,10 +3,11 @@
 {% block title %}ScrumSimple for Earth{% endblock %}
 
 {% block head %}
-{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/bootstrap-datepicker.standalone.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 {% endblock %}
 
@@ -26,7 +27,6 @@
             <ul class="nav navbar-nav">
                 <li><a href="{{ url_for('main.reports') }}">Daily Reports</a></li>
                 {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a></li>
                 <li><a href="{{ url_for('main.scrum') }}">Scrums</a></li>
                 <li><a href="{{ url_for('main.users') }}">Users</a></li>
                 <li><a href="{{ url_for('main.weeklys') }}">Weekly Plans</a></li>
@@ -35,15 +35,8 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{ current_user.gravatar(size=18) }}" width="18">
-                        Account <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
-                    </ul>
-                </li>
+                <li><a href="{{ url_for('main.user', username=current_user.username) }}"> <img src="{{ current_user.gravatar(size=18) }}" width="18"> {{ current_user.username}} </a></li>
+                <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
                 {% else %}
                 <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
                 {% endif %}
@@ -60,9 +53,34 @@
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}
-{{ moment.include_moment() }}
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/moment-with-langs.min.js') }}"></script>
+<script>
+function flask_moment_render(elem) {
+    $(elem).text(eval('moment("' + $(elem).data('timestamp') + '").' + $(elem).data('format') + ';'));
+    $(elem).removeClass('flask-moment');
+}
+function flask_moment_render_all() {
+    $('.flask-moment').each(function() {
+        flask_moment_render(this);
+        if ($(this).data('refresh')) {
+            (function(elem, interval) { setInterval(function() { flask_moment_render(elem) }, interval); })(this, $(this).data('refresh'));
+        }
+    })
+}
+$(document).ready(function() {
+    flask_moment_render_all();
+});
+</script>
+<script src="/static/js/bootstrap-datepicker.min.js"></script>
+<script src="/static/js/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="/static/js/bootstrap-4a.min.js"></script>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/Markdown.Converter.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/Markdown.Sanitizer.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-datepicker.zh-CN.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-4a.min.js') }}"></script>
 {% endblock %}

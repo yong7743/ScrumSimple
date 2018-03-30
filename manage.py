@@ -66,11 +66,13 @@ def profile(length=25, profile_dir=None):
 def deploy():
     """Run deployment tasks."""
     from flask_migrate import upgrade
-    from app.models import User, Report
+    from app.models import User, Report, Role
 
     # migrate database to latest revision
     upgrade()
 
+    # create or update user roles
+    Role.insert_roles()
 
 if __name__ == '__main__':
     manager.run()

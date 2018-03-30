@@ -37,10 +37,13 @@ def reports():
 def get_duty_text():
     # Temp solution for the U.S time zone
     today_date = (datetime.datetime.now() + datetime.timedelta(hours=8)).date()
-    dutySchedule = DutySchedule("e:/team-status/app/main/extension/member.json", datetime.date(2018, 2, 19))
-    duty_name = dutySchedule.get_member_onduty(today_date)
-    members_name = dutySchedule.get_members()
-    text = duty_name + "! o(*￣︶￣*)o ~~~~ Orders:" + ', '.join(members_name)
+    try:
+        dutySchedule = DutySchedule("e:/team-status/app/main/extension/member.json", datetime.date(2018, 2, 19))
+        duty_name = dutySchedule.get_member_onduty(today_date)
+        members_name = dutySchedule.get_members()
+        text = duty_name + "! o(*￣︶￣*)o ~~~~ Orders:" + ', '.join(members_name)
+    except:
+        text = "Config error!"
     return text
 
 
@@ -150,8 +153,8 @@ def weekly_plan(id):
 @login_required
 def edit(id):
     report = Report.query.get_or_404(id)
-    if current_user != report.author:
-        return "Not allow!"
+    if current_user != report.author and not current_user.is_administrator():
+        return "Not allow! Only current user and administrator can edit it"
     form = ReportForm()
     if form.validate_on_submit():
         report.body = form.body.data
@@ -168,8 +171,8 @@ def edit(id):
 @login_required
 def delete(id):
     report = Report.query.get_or_404(id)
-    if current_user != report.author:
-        return "Not allow!"
+    if current_user != report.author and not current_user.is_administrator():
+        return "Not allow! Only current user and administrator can delete it"
     else:
         form = ReportForm()
         db.session.delete(report)
