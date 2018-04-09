@@ -11,13 +11,13 @@ from flask_pagedown.fields import PageDownField
 
 class ReportForm(FlaskForm):
     date = DateField('Date?', default='', validators=[Required()], format='%Y/%m/%d', widget=widgets.DatePickerWidget())
-    body = PageDownField("What are you doing?", validators=[Required()])
+    body = PageDownField("What are you doing?", default='', validators=[Required()], render_kw={"placeholder": "Log your achievenments here ;-)"})
     submit = SubmitField('Submit')
 
 
 class WeeklyPlanForm(FlaskForm):
     date = DateField('Please select a date in target week?', default='', validators=[Required()], format='%Y/%m/%d', widget=widgets.DatePickerWidget())
-    body = PageDownField("Plans for this week?", validators=[Required()])
+    body = PageDownField("Plans for this week?", default='', validators=[Required()], render_kw={"placeholder": "Write down your plans for current week!"})
     submit = SubmitField('Submit')
 
 
