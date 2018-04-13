@@ -4,17 +4,9 @@
 {% block title %}Help{% endblock %}
 
 {% block page_content %}
+  <div>
+	<iframe src="https://bentan2013.github.io/ScrumSimple" style="position:relative;top:10px;left:10px;width:1000px;height:3999px;"></iframe>
+  </div>
 
-<div  id='write'  class = 'is-node'><h1><a name='header-n0' class='md-header-anchor '></a>ScrumSimple</h1><p></p><h2><a name='header-n4' class='md-header-anchor '></a>How to use it</h2><p>目前Esri的ArcGIS Earth在使用该工具进行团队组员状态跟踪。</p><p></p><h3><a name='header-n9' class='md-header-anchor '></a>Login</h3><p>使用GitHub账号登陆，会要求github的公开数据访问权限。</p><p>登陆之后，页面右上角会</p><h3><a name='header-n14' class='md-header-anchor '></a>Home tab</h3><ul><li>可以填写自己今天做的事情</li><li>查看team member每天做的事情</li></ul><h3><a name='header-n23' class='md-header-anchor '></a>Profile tab</h3><ul><li>查看自己的基本信息</li><li>查看自己的所有工作日志</li></ul><h3><a name='header-n32' class='md-header-anchor '></a>Scrums tab</h3><ul><li>能够查看某一段时间的日志</li></ul><h3><a name='header-n38' class='md-header-anchor '></a>Users tab</h3><ul><li><p>展示当前所有组员</p><p>​</p></li></ul><h3><a name='header-n45' class='md-header-anchor '></a>Weekly plan tab</h3><ul><li>组员在每周一的周会时，可以填写当周的计划，这样在周会的时候，可以对着每周计划汇报工作</li></ul><h3><a name='header-n51' class='md-header-anchor '></a>About tab</h3><ul><li>Some help information</li></ul><h2><a name='header-n57' class='md-header-anchor '></a>Deploy</h2><h3><a name='header-n58' class='md-header-anchor '></a>Install dependences</h3><p>pip install -r requirments/dev.txt</p><h3><a name='header-n61' class='md-header-anchor '></a>Init Database</h3><p>python manage.py db init
-python manage.py db migrate -m &quot;init&quot;
-python manage.py db upgrade</p><p>first runshell then keyin
-db.drop_all()
-db.create_all()
-to init the database</p><h3><a name='header-n71' class='md-header-anchor '></a>Run</h3><p>create run and run shell in pycharm</p><p>runshell
-script: C:\Projects\team-status\manage.py
-parameters: shell
-env: DEV_DATABASE_URL=sqlite:///c:/projects/team-status/data/data-dev.sqlite;PYTHONUNBUFFERED=1</p><p>run
-script: C:\Projects\team-status\manage.py
-parameters: runserver
-env: DEV_DATABASE_URL=sqlite:///c:/projects/team-status/data/data-dev.sqlite;PYTHONUNBUFFERED=1</p><p></p><h3><a name='header-n86' class='md-header-anchor '></a>Next</h3><ul><li>More choices for authorization</li><li>Associate github issues and commit</li></ul><h2><a name='header-n95' class='md-header-anchor '></a>Note</h2><p>非商用软件，由Flask Web开发 - 基于Python的Web应用开发实战 一书中附带的代码修改而来。</p><p></p><p>各部分源码地址：</p><ul><li><a href='https://github.com/BlackrockDigital/startbootstrap-stylish-portfolio'>home page</a></li><li><a href='https://github.com/miguelgrinberg/flasky'>Main</a></li></ul></div>
+
 {% endblock %}
