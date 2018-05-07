@@ -24,7 +24,7 @@ class DutySchedule:
 
 
 if __name__ == '__main__':
-    dutySchedule = DutySchedule("member.json", datetime.date(2018, 2, 19))
+    dutySchedule = DutySchedule("member.json", datetime.date(2018, 5, 7))
     duty_name = dutySchedule.get_member_onduty(datetime.date(2018, 3, 4))
     print(duty_name)
 

@@ -38,7 +38,8 @@ def get_duty_text():
     # Temp solution for the U.S time zone
     today_date = (datetime.datetime.now() + datetime.timedelta(hours=8)).date()
     try:
-        dutySchedule = DutySchedule("e:/team-status/app/main/extension/member.json", datetime.date(2018, 2, 19))
+        member_path = os.path.join(main_dir, 'extension/member.json')
+        dutySchedule = DutySchedule(member_path, datetime.date(2018, 5, 7))
         duty_name = dutySchedule.get_member_onduty(today_date)
         members_name = dutySchedule.get_members()
         text = duty_name + "! o(*￣︶￣*)o ~~~~ Orders:" + ', '.join(members_name)
