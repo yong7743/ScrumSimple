@@ -1,6 +1,11 @@
 .profile-thumbnail {
     position: absolute;
 }
+
+.multi-line-text {
+    white-space: pre-line;
+}
+
 .profile-header {
     min-height: 260px;
     margin-left: 280px;

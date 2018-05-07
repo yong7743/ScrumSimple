@@ -41,10 +41,9 @@ def get_duty_text():
         main_dir = os.path.abspath(os.path.dirname(__file__))
         member_path = os.path.join(main_dir, 'extension/member.json')
         dutySchedule = DutySchedule(member_path, datetime.date(2018, 5, 6))
-        #duty_name = dutySchedule.get_member_onduty(today_date)
+        duty_name = dutySchedule.get_member_onduty(today_date)
         members_name = dutySchedule.get_members()
-        duty_name = "Jasmine"
-        text = duty_name + "! o(*￣︶￣*)o ~~~~ Orders:" + ', '.join(members_name)
+        text = "Current:" + duty_name + "\nOrders:" + ', '.join(members_name)
     except:
         text = "Config error!"
     return text
