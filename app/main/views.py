@@ -43,6 +43,7 @@ def get_duty_text():
         dutySchedule = DutySchedule(member_path, datetime.date(2018, 5, 6))
         duty_name = dutySchedule.get_member_onduty(today_date)
         members_name = dutySchedule.get_members()
+        duty_name = "Jasmine"
         text = duty_name + "! o(*￣︶￣*)o ~~~~ Orders:" + ', '.join(members_name)
     except:
         text = "Config error!"
