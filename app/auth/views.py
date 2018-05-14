@@ -62,6 +62,7 @@ def logout():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+    return "Disable by Admin"
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(email=form.email.data,
