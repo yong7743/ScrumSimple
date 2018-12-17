@@ -27,10 +27,13 @@
     <p></p>
     <p></p>
     {% if current_time%}
-        <h4><p style="color:red">Now: {{ moment(current_time).format('LLL') }}</p></h4>
+        <h4><p class="multi-line-text" style="color:red">Now: {{ moment(current_time).format('LLL') }}</p></h4>
     {% endif %}
-    <p></p>
+    <p>_____</p>
+    <p>_____</p>
+    <p>_____</p>
 </div>
+
 
 <div class="Report-form">
     {{ wtf.quick_form(form)}}

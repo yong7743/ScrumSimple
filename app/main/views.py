@@ -40,7 +40,7 @@ def get_duty_text():
     try:
         main_dir = os.path.abspath(os.path.dirname(__file__))
         member_path = os.path.join(main_dir, 'extension/member.json')
-        dutySchedule = DutySchedule(member_path, datetime.date(2018, 5, 6))
+        dutySchedule = DutySchedule(member_path, datetime.date(2018, 10, 22))
         duty_name = dutySchedule.get_member_onduty(today_date)
         members_name = dutySchedule.get_members()
         text = "Current:" + duty_name + "\nOrders:" + ', '.join(members_name)
